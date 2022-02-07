@@ -1,0 +1,14 @@
+<fieldset>
+	<legend>#i18n{module.workflow.extendrating.task_update_resource_state_config.title}</legend>
+	<@input type='hidden' name='startState' value='${(initial_state.id)!}' id='startState'/>
+	<@formGroup labelKey='#i18n{module.workflow.extendrating.task_update_resource_state_config.state}' labelFor='endState'>
+		<@select name='endState' items=list_states!'' default_value='${(config.endState)!}' id='endState' mandatory=true/>
+	</@formGroup>
+	<@formGroup labelKey='#i18n{module.workflow.extendrating.task_update_resource_state_config.nbVote}' labelFor='nbVote'>
+		<@input type='number' name='nbVote' value='${(config.nbVote)!}' id='nbVote' mandatory=true/>
+	</@formGroup>
+	<@formGroup labelKey='#i18n{module.workflow.extendrating.task_update_resource_state_config.operation}' >
+		<@radioButton  name='operation' value='${inferieur_egal!}' labelKey='#i18n{module.workflow.extendrating.task_update_resource_state_config.operation.inf.egale}' params=((config?? && config.operation == inferieur_egal)?string('checked=true','false')!)/>
+		<@radioButton  name='operation' value='${superieur_egal!}' labelKey='#i18n{module.workflow.extendrating.task_update_resource_state_config.operation.sup.egale}' params=((config?? && config.operation == superieur_egal)?string('checked=true','false')!)/>
+	</@formGroup>
+</fieldset>
