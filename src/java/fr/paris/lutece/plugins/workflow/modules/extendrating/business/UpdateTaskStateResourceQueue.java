@@ -42,7 +42,10 @@ public class UpdateTaskStateResourceQueue
     private int _nIdResource;
     private int _nIdTask;
     private String _strResourceType;
+    private int _nIdExternalParent;
     private boolean _bInitialStateChange;
+    private int _nIdInitialState;
+    private int _nIdWorkflow;
 
     /**
      * Returns the IdResourceHistory
@@ -127,4 +130,52 @@ public class UpdateTaskStateResourceQueue
     {
         _bInitialStateChange = bInitialStateChange;
     }
+
+	/**
+	 * @return the _nIdInitialState
+	 */
+	public int getIdInitialState( )
+	{
+		return _nIdInitialState;
+	}
+
+	/**
+	 * @param nIdInitialState the _nIdInitialState to set
+	 */
+	public void setIdInitialState( int nIdInitialState )
+	{
+		this._nIdInitialState = nIdInitialState;
+	}
+
+	/**
+	 * @return the _nIdExternalParent
+	 */
+	public int getIdExternalParent( )
+	{
+		return _nIdExternalParent;
+	}
+
+	/**
+	 * @param nIdExternalParent the _nIdExternalParent to set
+	 */
+	public void setIdExternalParent( int nIdExternalParent )
+	{
+		this._nIdExternalParent = nIdExternalParent;
+	}
+
+	/**
+	 * @return the _nIdWorkflow
+	 */
+	public int getIdWorkflow( )
+	{
+		return _nIdWorkflow;
+	}
+
+	/**
+	 * @param nIdWorkflow the _nIdWorkflow to set
+	 */
+	public void setIdWorkflow( int nIdWorkflow )
+	{
+		this._nIdWorkflow = nIdWorkflow;
+	}
 }

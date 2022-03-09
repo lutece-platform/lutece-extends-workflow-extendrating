@@ -80,6 +80,16 @@ public interface IUpdateTaskStateResourceQueueService
      *            the task id
      */
     void deleteByIdTask( int nIdTask );
+    
+    /**
+     * Delete updateResourceQueue by task
+     * 
+     * @param nIdResource
+     *            the resource id
+     * @param strResourceType
+     *            the resource id
+     */
+    void delete( int nIdResource, String strResourceType );
 
     /**
      * Find all the UpdateResourceQueue actived
@@ -102,6 +112,13 @@ public interface IUpdateTaskStateResourceQueueService
      */
     UpdateTaskStateResourceQueue find( int nIdResourceHistory, int nIdTask );
 
+    /**
+     * Find all the UpdateResourceQueue
+     * 
+     * @return a list of {@link UpdateTaskStateResourceQueue}
+     */
+    UpdateTaskStateResourceQueue find( int nIdResource, String strResourceType );
+    
     /**
      * checks if the resource has reached its goal
      * 

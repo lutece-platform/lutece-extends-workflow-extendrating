@@ -77,6 +77,15 @@ public interface IUpdateTaskStateResourceQueueDAO
      */
 
     void deleteByIdTask( int nIdTask );
+    
+    /**
+     * Delete a record from the table
+     * 
+     * @param nIdResource
+     * @param strResourceType         
+     */
+
+    void delete( int nIdResource, String strResourceType );
 
     ///////////////////////////////////////////////////////////////////////////
     // Finders
@@ -102,6 +111,19 @@ public interface IUpdateTaskStateResourceQueueDAO
      */
 
     UpdateTaskStateResourceQueue find( int nIdResourceHistory, int nIdTask );
+    
+    /**
+     * Load the data from the table
+     * 
+     * @param nIdResource
+     *            The nIdResource of the updateTaskStateResourceQueue
+     * @param strResourceType
+     *            The strResourceType of the updateTaskStateResourceQueue
+     * @return The instance of the updateTaskStateResourceQueue
+     */
+
+    UpdateTaskStateResourceQueue find( int nIdResource,  String strResourceType );
+
 
     /**
      * Load the data of all the updateTaskStateResourceQueue objects and returns them as a collection
