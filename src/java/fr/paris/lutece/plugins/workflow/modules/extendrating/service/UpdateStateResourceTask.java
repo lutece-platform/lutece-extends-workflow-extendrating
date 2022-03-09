@@ -97,35 +97,27 @@ public class UpdateStateResourceTask extends SimpleTask
             UpdateTaskStateResourceQueue updateResourceQueue = new UpdateTaskStateResourceQueue( );
             updateResourceQueue.setIdResource( resourceHistory.getIdResource( ) );
             updateResourceQueue.setIdTask( getId( ) );
-            updateResourceQueue.setResourceType( getResourceType( resourceWorkflow ) );
+            updateResourceQueue.setResourceType( resourceWorkflow.getResourceType( ) );
+            updateResourceQueue.setIdExternalParent( resourceWorkflow.getExternalParentId( ) );
+            updateResourceQueue.setIdWorkflow( resourceWorkflow.getWorkflow( ).getId( ) );
             updateResourceQueue.setInitialStateChange( false );
-
+            updateResourceQueue.setIdInitialState( resourceWorkflow.getState().getId( ) );
+            
             _updateResourceQueueService.create( updateResourceQueue );
         }
     }
-
-    /**
-     * Gets resource type
-     * 
-     * @param resourceWorkflow
-     * @return resource type
-     */
-    private String getResourceType( ResourceWorkflow resourceWorkflow )
-    {
-        if ( Constants.FORMS_FORM_RESPONSE.equals( resourceWorkflow.getResourceType( ) ) )
-        {
-            return Constants.FORMS_FORM_RESPONSE + "_" + resourceWorkflow.getExternalParentId( );
-        }
-        else
-        {
-            return resourceWorkflow.getResourceType( );
-        }
-    }
-
+    
     @Override
     public void doRemoveConfig( )
     {
         _taskConfigService.remove( this.getId( ) );
         _updateResourceQueueService.deleteByIdTask( this.getId( ) );
+    }
+    
+    @Override
+    public void doRemoveTaskInformation( int nIdHistory )
+    {
+        ResourceHistory history = _resourceHistoryService.findByPrimaryKey( nIdHistory );
+    	_updateResourceQueueService.delete( history.getIdResource( ), getId( ) );
     }
 }

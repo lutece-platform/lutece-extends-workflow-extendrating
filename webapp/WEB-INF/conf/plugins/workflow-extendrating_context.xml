@@ -43,5 +43,8 @@
         class="fr.paris.lutece.plugins.workflow.modules.extendrating.web.UpdateTaskStateResourceComponent"
         p:taskType-ref="workflow-extendrating.taskTypeUpdateResourceState"
         p:taskConfigService-ref="workflow-extendrating.taskUpdateResourceStateConfigService" />
-
+        
+    <!-- EventRessourceListener -->
+    <bean id="workflow-extendrating.updateTaskStateResourceListener"
+        class="fr.paris.lutece.plugins.workflow.modules.extendrating.service.UpdateTaskStateResourceListener" />
 </beans>

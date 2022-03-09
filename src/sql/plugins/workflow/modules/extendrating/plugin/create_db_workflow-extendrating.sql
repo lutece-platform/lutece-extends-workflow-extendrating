@@ -20,5 +20,7 @@ CREATE TABLE extend_rating_update_resource_state_queue (
   id_task INT DEFAULT 0 NOT NULL,
   resource_type VARCHAR(255) DEFAULT '' NOT NULL,
   initial_state_change INT DEFAULT 0 NOT NULL,
-  PRIMARY KEY ( id_resource )
+  id_initial_state INT DEFAULT 0 NOT NULL,
+  id_external_parent INT DEFAULT 0 NOT NULL,
+  id_workflow INT DEFAULT 0 NOT NULL
 );

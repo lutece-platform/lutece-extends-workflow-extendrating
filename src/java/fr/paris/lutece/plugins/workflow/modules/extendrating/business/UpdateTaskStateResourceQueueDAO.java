@@ -45,14 +45,16 @@ public final class UpdateTaskStateResourceQueueDAO implements IUpdateTaskStateRe
 {
 
     // Constants
-    private static final String SQL_QUERY_SELECT = "SELECT id_resource, id_task, resource_type, initial_state_change FROM extend_rating_update_resource_state_queue WHERE id_resource = ?";
-    private static final String SQL_QUERY_SELECT_BY_ID_TASK_AND_ID_RESOURCE = "SELECT id_resource, id_task, resource_type, initial_state_change FROM extend_rating_update_resource_state_queue WHERE id_resource = ? AND id_task = ?";
-    private static final String SQL_QUERY_INSERT = "INSERT INTO extend_rating_update_resource_state_queue ( id_resource, id_task, resource_type, initial_state_change ) VALUES ( ?, ?, ?, ? ) ";
+    private static final String SQL_QUERY_SELECT = "SELECT id_resource, id_task, resource_type, initial_state_change, id_initial_state, id_external_parent, id_workflow  FROM extend_rating_update_resource_state_queue WHERE id_resource = ?";
+    private static final String SQL_QUERY_SELECT_BY_ID_TASK_AND_ID_RESOURCE = "SELECT id_resource, id_task, resource_type, initial_state_change, id_initial_state, id_external_parent, id_workflow FROM extend_rating_update_resource_state_queue WHERE id_resource = ? AND id_task = ?";
+    private static final String SQL_QUERY_INSERT = "INSERT INTO extend_rating_update_resource_state_queue ( id_resource, id_task, resource_type, initial_state_change, id_initial_state, id_external_parent, id_workflow ) VALUES ( ?, ?, ?, ?, ?, ?, ? ) ";
     private static final String SQL_QUERY_DELETE = "DELETE FROM extend_rating_update_resource_state_queue WHERE id_resource = ? AND id_task = ? ";
-    private static final String SQL_QUERY_UPDATE = "UPDATE extend_rating_update_resource_state_queue SET id_resource = ?, id_task = ?, resource_type = ?, initial_state_change = ? WHERE id_resource = ? AND id_task = ? ";
-    private static final String SQL_QUERY_SELECTALL_ACTIVED = "SELECT id_resource, id_task, resource_type, initial_state_change FROM extend_rating_update_resource_state_queue WHERE initial_state_change = 0";
-    private static final String SQL_QUERY_SELECTALL_DISABLED = "SELECT id_resource, id_task, resource_type, initial_state_change FROM extend_rating_update_resource_state_queue WHERE initial_state_change = 1";
+    private static final String SQL_QUERY_UPDATE = "UPDATE extend_rating_update_resource_state_queue SET id_resource = ?, id_task = ?, resource_type = ?, initial_state_change = ?, id_initial_state = ?, id_external_parent = ?, id_workflow = ? WHERE id_resource = ? AND id_task = ? ";
+    private static final String SQL_QUERY_SELECTALL_ACTIVED = "SELECT id_resource, id_task, resource_type, initial_state_change, id_initial_state, id_external_parent, id_workflow FROM extend_rating_update_resource_state_queue WHERE initial_state_change = 0";
+    private static final String SQL_QUERY_SELECTALL_DISABLED = "SELECT id_resource, id_task, resource_type, initial_state_change, id_initial_state, id_external_parent, id_workflow FROM extend_rating_update_resource_state_queue WHERE initial_state_change = 1";
     private static final String SQL_QUERY_DELETE_BY_ID_TASK = "DELETE FROM extend_rating_update_resource_state_queue WHERE id_task = ? ";
+    private static final String SQL_QUERY_DELETE_BY_ID_RESOURCE_AND_TYPE = "DELETE FROM extend_rating_update_resource_state_queue WHERE id_resource = ? AND resource_type = ?";
+    private static final String SQL_QUERY_SELECT_BY_ID_RESOURCE_AND_TYPE = "SELECT id_resource, id_task, resource_type, initial_state_change, id_initial_state, id_external_parent, id_workflow FROM extend_rating_update_resource_state_queue WHERE id_resource = ? AND resource_type = ?";
 
     /**
      * {@inheritDoc }
@@ -67,7 +69,10 @@ public final class UpdateTaskStateResourceQueueDAO implements IUpdateTaskStateRe
             daoUtil.setInt( ++nIndex, updateTaskStateResourceQueue.getIdTask( ) );
             daoUtil.setString( ++nIndex, updateTaskStateResourceQueue.getResourceType( ) );
             daoUtil.setBoolean( ++nIndex, updateTaskStateResourceQueue.isInitialStateChange( ) );
-
+            daoUtil.setInt( ++nIndex, updateTaskStateResourceQueue.getIdInitialState( ) );
+            daoUtil.setInt( ++nIndex, updateTaskStateResourceQueue.getIdExternalParent( ) );
+            daoUtil.setInt( ++nIndex, updateTaskStateResourceQueue.getIdWorkflow( ) );
+            
             daoUtil.executeUpdate( );
             daoUtil.free( );
         }
@@ -94,6 +99,9 @@ public final class UpdateTaskStateResourceQueueDAO implements IUpdateTaskStateRe
                 updateTaskStateResourceQueue.setIdTask( daoUtil.getInt( ++nIndex ) );
                 updateTaskStateResourceQueue.setResourceType( daoUtil.getString( ++nIndex ) );
                 updateTaskStateResourceQueue.setInitialStateChange( daoUtil.getBoolean( ++nIndex ) );
+                updateTaskStateResourceQueue.setIdInitialState( daoUtil.getInt( ++nIndex ) );
+                updateTaskStateResourceQueue.setIdExternalParent( daoUtil.getInt( ++nIndex ) );
+                updateTaskStateResourceQueue.setIdWorkflow( daoUtil.getInt( ++nIndex ) );
             }
 
             daoUtil.free( );
@@ -141,6 +149,10 @@ public final class UpdateTaskStateResourceQueueDAO implements IUpdateTaskStateRe
             daoUtil.setInt( ++nIndex, updateTaskStateResourceQueue.getIdTask( ) );
             daoUtil.setString( ++nIndex, updateTaskStateResourceQueue.getResourceType( ) );
             daoUtil.setBoolean( ++nIndex, updateTaskStateResourceQueue.isInitialStateChange( ) );
+            daoUtil.setInt( ++nIndex, updateTaskStateResourceQueue.getIdInitialState( ) );
+            daoUtil.setInt( ++nIndex, updateTaskStateResourceQueue.getIdExternalParent( ) );
+            daoUtil.setInt( ++nIndex, updateTaskStateResourceQueue.getIdWorkflow( ) );
+            
             daoUtil.setInt( ++nIndex, updateTaskStateResourceQueue.getIdResource( ) );
             daoUtil.setInt( ++nIndex, updateTaskStateResourceQueue.getIdTask( ) );
 
@@ -162,11 +174,16 @@ public final class UpdateTaskStateResourceQueueDAO implements IUpdateTaskStateRe
 
             while ( daoUtil.next( ) )
             {
+            	int nIndex = 0;
                 UpdateTaskStateResourceQueue updateTaskStateResourceQueue = new UpdateTaskStateResourceQueue( );
-                updateTaskStateResourceQueue.setIdResource( daoUtil.getInt( 1 ) );
-                updateTaskStateResourceQueue.setIdTask( daoUtil.getInt( 2 ) );
-                updateTaskStateResourceQueue.setResourceType( daoUtil.getString( 3 ) );
-                updateTaskStateResourceQueue.setInitialStateChange( daoUtil.getBoolean( 4 ) );
+                updateTaskStateResourceQueue.setIdResource( daoUtil.getInt( ++nIndex ) );
+                updateTaskStateResourceQueue.setIdTask( daoUtil.getInt( ++nIndex ) );
+                updateTaskStateResourceQueue.setResourceType( daoUtil.getString( ++nIndex ) );
+                updateTaskStateResourceQueue.setInitialStateChange( daoUtil.getBoolean( ++nIndex ) );
+                updateTaskStateResourceQueue.setIdInitialState( daoUtil.getInt( ++nIndex ) );
+                updateTaskStateResourceQueue.setIdExternalParent( daoUtil.getInt( ++nIndex ) );
+                updateTaskStateResourceQueue.setIdWorkflow( daoUtil.getInt( ++nIndex ) );
+                
                 listUpdateResourceQueues.add( updateTaskStateResourceQueue );
             }
 
@@ -189,11 +206,16 @@ public final class UpdateTaskStateResourceQueueDAO implements IUpdateTaskStateRe
 
             while ( daoUtil.next( ) )
             {
+            	int nIndex = 0;
                 UpdateTaskStateResourceQueue updateTaskStateResourceQueue = new UpdateTaskStateResourceQueue( );
-                updateTaskStateResourceQueue.setIdResource( daoUtil.getInt( 1 ) );
-                updateTaskStateResourceQueue.setIdTask( daoUtil.getInt( 2 ) );
-                updateTaskStateResourceQueue.setResourceType( daoUtil.getString( 3 ) );
-                updateTaskStateResourceQueue.setInitialStateChange( daoUtil.getBoolean( 4 ) );
+                updateTaskStateResourceQueue.setIdResource( daoUtil.getInt( ++nIndex ) );
+                updateTaskStateResourceQueue.setIdTask( daoUtil.getInt( ++nIndex ) );
+                updateTaskStateResourceQueue.setResourceType( daoUtil.getString( ++nIndex ) );
+                updateTaskStateResourceQueue.setInitialStateChange( daoUtil.getBoolean( ++nIndex ) );
+                updateTaskStateResourceQueue.setIdInitialState( daoUtil.getInt( ++nIndex ) );
+                updateTaskStateResourceQueue.setIdExternalParent( daoUtil.getInt( ++nIndex ) );
+                updateTaskStateResourceQueue.setIdWorkflow( daoUtil.getInt( ++nIndex ) );
+                
                 listUpdateResourceQueues.add( updateTaskStateResourceQueue );
             }
 
@@ -225,6 +247,9 @@ public final class UpdateTaskStateResourceQueueDAO implements IUpdateTaskStateRe
                 updateTaskStateResourceQueue.setIdTask( daoUtil.getInt( ++nIndex ) );
                 updateTaskStateResourceQueue.setResourceType( daoUtil.getString( ++nIndex ) );
                 updateTaskStateResourceQueue.setInitialStateChange( daoUtil.getBoolean( ++nIndex ) );
+                updateTaskStateResourceQueue.setIdInitialState( daoUtil.getInt( ++nIndex ) );
+                updateTaskStateResourceQueue.setIdExternalParent( daoUtil.getInt( ++nIndex ) );
+                updateTaskStateResourceQueue.setIdWorkflow( daoUtil.getInt( ++nIndex ) );
             }
 
             daoUtil.free( );
@@ -232,5 +257,47 @@ public final class UpdateTaskStateResourceQueueDAO implements IUpdateTaskStateRe
             return updateTaskStateResourceQueue;
         }
     }
+
+	@Override
+	public void delete( int nIdResource, String strResourceType )
+	{
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_BY_ID_RESOURCE_AND_TYPE ) )
+        {
+            daoUtil.setInt( 1, nIdResource );
+            daoUtil.setString( 2, strResourceType );
+            daoUtil.executeUpdate( );
+            daoUtil.free( );
+        }
+	}
+	
+	@Override
+	public UpdateTaskStateResourceQueue find(int nIdResource, String strResourceType)
+	{
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_ID_RESOURCE_AND_TYPE ) )
+        {
+            daoUtil.setInt( 1, nIdResource );
+            daoUtil.setString( 2, strResourceType );
+            daoUtil.executeQuery( );
+
+            UpdateTaskStateResourceQueue updateTaskStateResourceQueue = null;
+
+            if ( daoUtil.next( ) )
+            {
+                int nIndex = 0;
+                updateTaskStateResourceQueue = new UpdateTaskStateResourceQueue( );
+                updateTaskStateResourceQueue.setIdResource( daoUtil.getInt( ++nIndex ) );
+                updateTaskStateResourceQueue.setIdTask( daoUtil.getInt( ++nIndex ) );
+                updateTaskStateResourceQueue.setResourceType( daoUtil.getString( ++nIndex ) );
+                updateTaskStateResourceQueue.setInitialStateChange( daoUtil.getBoolean( ++nIndex ) );
+                updateTaskStateResourceQueue.setIdInitialState( daoUtil.getInt( ++nIndex ) );
+                updateTaskStateResourceQueue.setIdExternalParent( daoUtil.getInt( ++nIndex ) );
+                updateTaskStateResourceQueue.setIdWorkflow( daoUtil.getInt( ++nIndex ) );
+            }
+
+            daoUtil.free( );
+
+            return updateTaskStateResourceQueue;
+        }
+	}
 
 }

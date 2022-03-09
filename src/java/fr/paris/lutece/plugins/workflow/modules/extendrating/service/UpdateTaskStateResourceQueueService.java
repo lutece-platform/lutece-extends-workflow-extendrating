@@ -143,6 +143,15 @@ public class UpdateTaskStateResourceQueueService implements IUpdateTaskStateReso
     /**
      * {@inheritDoc}
      */
+	@Override
+	public UpdateTaskStateResourceQueue find( int nIdResource, String strResourceType )
+	{
+		return _updateResourceQueueDAO.find( nIdResource, strResourceType );
+	}
+	
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void delete( int nIdResourceHistory, int nIdTask )
     {
@@ -153,11 +162,20 @@ public class UpdateTaskStateResourceQueueService implements IUpdateTaskStateReso
      * {@inheritDoc}
      */
 	@Override
-	public void deleteByIdTask(int nIdTask) 
+	public void deleteByIdTask( int nIdTask ) 
 	{
 		_updateResourceQueueDAO.deleteByIdTask( nIdTask );	
 	}
 
+    /**
+     * {@inheritDoc}
+     */
+	@Override
+	public void delete( int nIdResource, String strResourceType )
+	{
+		_updateResourceQueueDAO.delete( nIdResource, strResourceType );
+		
+	}
 	
     /**
      * {@inheritDoc}
