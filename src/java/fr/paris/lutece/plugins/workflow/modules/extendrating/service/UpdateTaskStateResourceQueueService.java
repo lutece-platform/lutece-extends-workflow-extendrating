@@ -35,12 +35,13 @@ package fr.paris.lutece.plugins.workflow.modules.extendrating.service;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import fr.paris.lutece.plugins.extend.modules.rating.business.Rating;
-import fr.paris.lutece.plugins.extend.modules.rating.service.IRatingService;
+import fr.paris.lutece.plugins.extend.modules.rating.business.SimpleRating;
 import fr.paris.lutece.plugins.extend.modules.rating.service.RatingService;
 import fr.paris.lutece.plugins.workflow.modules.extendrating.business.IUpdateTaskStateResourceQueueDAO;
 import fr.paris.lutece.plugins.workflow.modules.extendrating.business.UpdateTaskStateResourceQueue;
@@ -77,9 +78,6 @@ public class UpdateTaskStateResourceQueueService implements IUpdateTaskStateReso
     @Inject
     @Named( ResourceHistoryService.BEAN_SERVICE )
     private IResourceHistoryService _resourceHistoryService;
-    @Inject
-    @Named( RatingService.BEAN_SERVICE )
-    private IRatingService _ratingService;
     @Inject
     @Named( ActionService.BEAN_SERVICE )
     private IActionService _actionService;
@@ -183,10 +181,11 @@ public class UpdateTaskStateResourceQueueService implements IUpdateTaskStateReso
     @Override
     public boolean isVotingGoalValid( UpdateTaskStateResourceConfig config, UpdateTaskStateResourceQueue updateResourceQueue )
     {
-        Rating rating = _ratingService.findByResource( String.valueOf( updateResourceQueue.getIdResource( ) ), updateResourceQueue.getResourceType( ) );
+        Optional<Rating> optionalRating = RatingService.INSTANCE.findAndbuildRatingResult( String.valueOf( updateResourceQueue.getIdResource( ) ), updateResourceQueue.getResourceType( ), SimpleRating.class.getName( ) );
 
-        if ( rating != null )
+        if ( optionalRating.isPresent( ) )
         {
+        	Rating rating= optionalRating.get();
             Action action = _actionService.findByPrimaryKey( _taskService.findByPrimaryKey( config.getIdTask( ), I18nService.getDefaultLocale( ) ).getAction( ).getId( ) );
 
             // If initial state is change
@@ -197,13 +196,13 @@ public class UpdateTaskStateResourceQueueService implements IUpdateTaskStateReso
                 return false;
             }
 
-            if ( config.getOperation( ) == Constants.SUPERIEUR_EGAL && rating.getVoteCount( ) >= config.getNbVote( ) )
+            if ( config.getOperation( ) == Constants.SUPERIEUR_EGAL && rating.getRatingCount( ) >= config.getNbVote( ) )
             {
                 return true;
             }
             else
             {
-                return config.getOperation( ) == Constants.INFERIEUR_EGAL && rating.getVoteCount( ) <= config.getNbVote( );
+                return config.getOperation( ) == Constants.INFERIEUR_EGAL && rating.getRatingCount( ) <= config.getNbVote( );
             }
         }
         return false;
