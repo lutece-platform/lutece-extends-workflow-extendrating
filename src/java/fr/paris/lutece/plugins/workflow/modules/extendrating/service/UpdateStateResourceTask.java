@@ -97,7 +97,7 @@ public class UpdateStateResourceTask extends SimpleTask
             UpdateTaskStateResourceQueue updateResourceQueue = new UpdateTaskStateResourceQueue( );
             updateResourceQueue.setIdResource( resourceHistory.getIdResource( ) );
             updateResourceQueue.setIdTask( getId( ) );
-            updateResourceQueue.setResourceType( resourceWorkflow.getResourceType( ) );
+            updateResourceQueue.setResourceType( getResourceType( resourceWorkflow ) );
             updateResourceQueue.setIdExternalParent( resourceWorkflow.getExternalParentId( ) );
             updateResourceQueue.setIdWorkflow( resourceWorkflow.getWorkflow( ).getId( ) );
             updateResourceQueue.setInitialStateChange( false );
@@ -120,4 +120,21 @@ public class UpdateStateResourceTask extends SimpleTask
         ResourceHistory history = _resourceHistoryService.findByPrimaryKey( nIdHistory );
     	_updateResourceQueueService.delete( history.getIdResource( ), getId( ) );
     }
+    /**
+     * Gets resource type
+     * 
+     * @param resourceWorkflow
+     * @return resource type
+     */
+     private String getResourceType( ResourceWorkflow resourceWorkflow )
+     {
+         if ( Constants.FORMS_FORM_RESPONSE.equals( resourceWorkflow.getResourceType( ) ) )
+         {
+               return Constants.FORMS_FORM_RESPONSE + "_" + resourceWorkflow.getExternalParentId( );
+          }
+          else
+          {
+              return resourceWorkflow.getResourceType( );
+          }
+     }
 }
