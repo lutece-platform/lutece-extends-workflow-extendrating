@@ -91,10 +91,12 @@ public class UpdateStateResourceTask extends SimpleTask
 
         ResourceWorkflow resourceWorkflow = _resourceWorkflowService.findByPrimaryKey( resourceHistory.getIdResource( ), resourceHistory.getResourceType( ),
                 resourceHistory.getWorkflow( ).getId( ) );
-
-        if ( _updateResourceQueueService.find( resourceHistory.getIdResource( ), getId( ) ) == null )
+  
+        UpdateTaskStateResourceQueue updateResourceQueue = _updateResourceQueueService.find( resourceHistory.getIdResource( ), getResourceType( resourceWorkflow ) );
+        
+        if ( updateResourceQueue == null )
         {
-            UpdateTaskStateResourceQueue updateResourceQueue = new UpdateTaskStateResourceQueue( );
+            updateResourceQueue = new UpdateTaskStateResourceQueue( );
             updateResourceQueue.setIdResource( resourceHistory.getIdResource( ) );
             updateResourceQueue.setIdTask( getId( ) );
             updateResourceQueue.setResourceType( getResourceType( resourceWorkflow ) );
@@ -102,8 +104,15 @@ public class UpdateStateResourceTask extends SimpleTask
             updateResourceQueue.setIdWorkflow( resourceWorkflow.getWorkflow( ).getId( ) );
             updateResourceQueue.setInitialStateChange( false );
             updateResourceQueue.setIdInitialState( resourceWorkflow.getState().getId( ) );
-            
             _updateResourceQueueService.create( updateResourceQueue );
+        }
+        else
+        {
+            updateResourceQueue.setIdTask( getId( ) );
+            updateResourceQueue.setResourceType( getResourceType( resourceWorkflow ) );
+            updateResourceQueue.setIdWorkflow( resourceWorkflow.getWorkflow( ).getId( ) );
+            updateResourceQueue.setIdInitialState( resourceWorkflow.getState().getId( ) );
+            _updateResourceQueueService.update( updateResourceQueue );
         }
     }
     

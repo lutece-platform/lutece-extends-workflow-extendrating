@@ -236,6 +236,9 @@ public class UpdateTaskStateResourceQueueService implements IUpdateTaskStateReso
             resourceWorkflow.setState( state );
             _resourceWorkflowService.update( resourceWorkflow );
 
+            // Delete updateResourceQueue
+            delete( updateResourceQueue.getIdResource( ), updateResourceQueue.getIdTask( ) );
+            
             // If the new state has automatic reflexive actions
             WorkflowService.getInstance( ).doProcessAutomaticReflexiveActions( updateResourceQueue.getIdResource( ), updateResourceQueue.getResourceType( ),
                     state.getId( ), resourceWorkflow.getExternalParentId( ), locale, null );
@@ -243,9 +246,6 @@ public class UpdateTaskStateResourceQueueService implements IUpdateTaskStateReso
             // if new state has action automatic
             WorkflowService.getInstance( ).executeActionAutomatic( updateResourceQueue.getIdResource( ), updateResourceQueue.getResourceType( ),
                     action.getWorkflow( ).getId( ), resourceWorkflow.getExternalParentId( ), null );
-
-            // Delete updateResourceQueue
-            delete( updateResourceQueue.getIdResource( ), updateResourceQueue.getIdTask( ) );
         }
     }
 
