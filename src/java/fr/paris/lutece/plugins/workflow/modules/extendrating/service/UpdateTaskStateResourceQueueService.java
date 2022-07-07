@@ -223,7 +223,7 @@ public class UpdateTaskStateResourceQueueService implements IUpdateTaskStateReso
             // Create Resource History
             ResourceHistory resourceHistory = new ResourceHistory( );
             resourceHistory.setIdResource( updateResourceQueue.getIdResource( ) );
-            resourceHistory.setResourceType( updateResourceQueue.getResourceType( ) );
+            resourceHistory.setResourceType( Constants.FORMS_FORM_RESPONSE );
             resourceHistory.setAction( action );
             resourceHistory.setWorkFlow( action.getWorkflow( ) );
             resourceHistory.setCreationDate( WorkflowUtils.getCurrentTimestamp( ) );
@@ -240,11 +240,11 @@ public class UpdateTaskStateResourceQueueService implements IUpdateTaskStateReso
             delete( updateResourceQueue.getIdResource( ), updateResourceQueue.getIdTask( ) );
             
             // If the new state has automatic reflexive actions
-            WorkflowService.getInstance( ).doProcessAutomaticReflexiveActions( updateResourceQueue.getIdResource( ), updateResourceQueue.getResourceType( ),
+            WorkflowService.getInstance( ).doProcessAutomaticReflexiveActions( updateResourceQueue.getIdResource( ), Constants.FORMS_FORM_RESPONSE,
                     state.getId( ), resourceWorkflow.getExternalParentId( ), locale, null );
 
             // if new state has action automatic
-            WorkflowService.getInstance( ).executeActionAutomatic( updateResourceQueue.getIdResource( ), updateResourceQueue.getResourceType( ),
+            WorkflowService.getInstance( ).executeActionAutomatic( updateResourceQueue.getIdResource( ), Constants.FORMS_FORM_RESPONSE,
                     action.getWorkflow( ).getId( ), resourceWorkflow.getExternalParentId( ), null );
         }
     }

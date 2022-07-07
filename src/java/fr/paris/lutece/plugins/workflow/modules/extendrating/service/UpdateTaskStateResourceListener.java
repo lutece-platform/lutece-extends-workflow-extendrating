@@ -104,7 +104,7 @@ public class UpdateTaskStateResourceListener implements EventRessourceListener
                 if ( resourceInQueue != null )
                 {
                     ResourceWorkflow resourceWorkflow = _resourceWorkflowService.findByPrimaryKey( resourceInQueue.getIdResource( ),
-                            resourceInQueue.getResourceType( ), resourceInQueue.getIdWorkflow( ) );
+                            Constants.FORMS_FORM_RESPONSE, resourceInQueue.getIdWorkflow( ) );
                     
                     if ( resourceWorkflow == null || resourceInQueue.getIdInitialState( ) != resourceWorkflow.getState( ).getId( ) )
                     {
