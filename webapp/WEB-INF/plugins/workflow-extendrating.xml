@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <plug-in>
-    <name>workflow-extend-rating</name>
-    <class>fr.paris.lutece.portal.service.plugin.PluginDefaultImplementation</class>
+    <name>workflow-extendrating</name>
+    <class>fr.paris.lutece.plugins.workflow.modules.extendrating.service.WorkflowExtendRatingPlugin</class>
     <version>1.0.0-SNAPSHOT</version>
     <documentation></documentation>
     <installation></installation>
     <changes></changes>
     <user-guide></user-guide>
-    <description>module.workflow.extend.rating.module.description</description>
-    <provider>module.workflow.extend.rating.module.provider</provider>
+    <description>module.workflow.extendrating.module.description</description>
+    <provider>module.workflow.extendrating.module.provider</provider>
     <provider-url>http://lutece.paris.fr</provider-url>
     <icon-url>images/admin/skin/feature_default_icon.png</icon-url>
     <copyright>2022</copyright>
@@ -94,16 +94,20 @@
     -->
 
     <!-- Daemons -->
-    <!-- 
     <daemons>
         <daemon>
-            <daemon-id>...</daemon-id>
-            <daemon-name>...</daemon-name>
-            <daemon-description>...</daemon-description>
-            <daemon-class>...</daemon-class>
+            <daemon-id>updateTaskStateResourceDaemon</daemon-id>
+            <daemon-name>workflow-extendrating.daemon.updateTaskStateResourceDaemon.name</daemon-name>
+            <daemon-description>workflow-extendrating.daemon.updateTaskStateResourceDaemon.description</daemon-description>
+            <daemon-class>fr.paris.lutece.plugins.workflow.modules.extendrating.service.UpdateTaskStateResourceDaemon</daemon-class>
+        </daemon>
+        <daemon>
+            <daemon-id>updateTaskStateResourceCleanerDaemon</daemon-id>
+            <daemon-name>workflow-extendrating.daemon.updateTaskStateResourceCleanerDaemon.name</daemon-name>
+            <daemon-description>workflow-extendrating.daemon.updateTaskStateResourceCleanerDaemon.description</daemon-description>
+            <daemon-class>fr.paris.lutece.plugins.workflow.modules.extendrating.service.UpdateTaskStateResourceCleanerDaemon</daemon-class>
         </daemon>
     </daemons>
-    -->
     
    
     <!-- Other services -->

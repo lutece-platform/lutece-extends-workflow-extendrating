@@ -31,35 +31,40 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.workflow.modules.extend.rating.business;
+package fr.paris.lutece.plugins.workflow.modules.extendrating.service;
 
-import java.io.Serializable;
+import fr.paris.lutece.plugins.workflow.modules.extendrating.util.Constants;
+import fr.paris.lutece.portal.service.event.ResourceEventManager;
+import fr.paris.lutece.portal.service.plugin.Plugin;
+import fr.paris.lutece.portal.service.plugin.PluginDefaultImplementation;
+import fr.paris.lutece.portal.service.plugin.PluginService;
+import fr.paris.lutece.portal.service.spring.SpringContextService;
 
 /**
- * This is the business class for the object ExtendRating
- */ 
-public class ExtendRating implements Serializable
-{
-    private static final long serialVersionUID = 1L;
-
-    // Variables declarations 
-    private int _nId;
-
+ * 
+ * WorkflowExtendRatingPlugin
+ *
+ */
+public class WorkflowExtendRatingPlugin extends PluginDefaultImplementation
+{	
+	private static final String BEAN_UPDATE_TASK_RESOURCE_LISTENER = Constants.PLUGIN_NAME + ".updateTaskStateResourceListener";
+	
     /**
-     * Returns the Id
-     * @return The Id
+     * {@inheritDoc}
      */
-    public int getId( )
+    @Override
+    public void init( )
     {
-        return _nId;
+        ResourceEventManager.register( SpringContextService.getBean( BEAN_UPDATE_TASK_RESOURCE_LISTENER ) );
     }
 
     /**
-     * Sets the Id
-     * @param nId The Id
-     */ 
-    public void setId( int nId )
+     * Return the plugin
+     *
+     * @return the plugin
+     */
+    public static Plugin getPlugin( )
     {
-        _nId = nId;
+        return PluginService.getPlugin( Constants.PLUGIN_NAME );
     }
 }

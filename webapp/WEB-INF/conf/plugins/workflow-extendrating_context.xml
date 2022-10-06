@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-3.0.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+       
+    <!-- DAO -->
+    <bean id="workflow-extendrating.taskUpdateResourceStateConfigDAO"
+        class="fr.paris.lutece.plugins.workflow.modules.extendrating.business.UpdateTaskStateResourceConfigDAO" />
+    <bean id="workflow-extendrating.updateResourceQueueDAO"
+        class="fr.paris.lutece.plugins.workflow.modules.extendrating.business.UpdateTaskStateResourceQueueDAO" />
+
+    <!-- Services -->
+    <bean id="workflow-extendrating.taskUpdateResourceStateConfigService"
+        class="fr.paris.lutece.plugins.workflowcore.service.config.TaskConfigService"
+        p:taskConfigDAO-ref="workflow-extendrating.taskUpdateResourceStateConfigDAO" />
+    <bean id="workflow-extendrating.updateResourceQueueService"
+        class="fr.paris.lutece.plugins.workflow.modules.extendrating.service.UpdateTaskStateResourceQueueService" />
+
+    <!-- Task -->
+    <bean id="workflow-extendrating.taskTypeUpdateResourceState"
+        class="fr.paris.lutece.plugins.workflowcore.business.task.TaskType"
+        p:key="taskTypeUpdateResourceState" p:titleI18nKey="module.workflow.extendrating.updateResourceState.task_title"
+        p:beanName="workflow-extendrating.updateResourceStateTask"
+        p:configBeanName="workflow-extendrating.updateResourceStateTaskConfig"
+        p:configRequired="true" p:formTaskRequired="true"
+        p:taskForAutomaticAction="true" />
+
+    <bean id="workflow-extendrating.updateResourceStateTask"
+        class="fr.paris.lutece.plugins.workflow.modules.extendrating.service.UpdateStateResourceTask"
+        scope="prototype" />
+    <bean id="workflow-extendrating.updateResourceStateTaskConfig"
+        class="fr.paris.lutece.plugins.workflow.modules.extendrating.business.UpdateTaskStateResourceConfig"
+        scope="prototype" />
+
+    <bean id="workflow-extendrating.updateResourceStateTaskComponent"
+        class="fr.paris.lutece.plugins.workflow.modules.extendrating.web.UpdateTaskStateResourceComponent"
+        p:taskType-ref="workflow-extendrating.taskTypeUpdateResourceState"
+        p:taskConfigService-ref="workflow-extendrating.taskUpdateResourceStateConfigService" />
+        
+    <!-- EventRessourceListener -->
+    <bean id="workflow-extendrating.updateTaskStateResourceListener"
+        class="fr.paris.lutece.plugins.workflow.modules.extendrating.service.UpdateTaskStateResourceListener" />
+</beans>

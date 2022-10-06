@@ -1,10 +1,26 @@
+--
+-- Table structure for table task_alert_cf
+--
+DROP TABLE IF EXISTS task_extend_rating_update_resource_state_cf;
+CREATE TABLE task_extend_rating_update_resource_state_cf(
+  id_task INT DEFAULT 0 NOT NULL,
+  id_state_start INT DEFAULT 0 NOT NULL,
+  id_state_end INT DEFAULT 0 NOT NULL,
+  nb_vote INT DEFAULT 0 NOT NULL,
+  operation INT DEFAULT 0 NOT NULL,
+  PRIMARY KEY (id_task)
+);
 
 --
--- Structure for table workflow_extendrating_config
+-- Table structure for table extend_rating_update_resource_state_queue
 --
-
-DROP TABLE IF EXISTS workflow_extend_rating_config;
-CREATE TABLE workflow_extend_rating_config (
-id_extend_rating int AUTO_INCREMENT,
-PRIMARY KEY (id_extend_rating)
+DROP TABLE IF EXISTS extend_rating_update_resource_state_queue;
+CREATE TABLE extend_rating_update_resource_state_queue (
+  id_resource INT DEFAULT 0 NOT NULL,
+  id_task INT DEFAULT 0 NOT NULL,
+  resource_type VARCHAR(255) DEFAULT '' NOT NULL,
+  initial_state_change INT DEFAULT 0 NOT NULL,
+  id_initial_state INT DEFAULT 0 NOT NULL,
+  id_external_parent INT DEFAULT 0 NOT NULL,
+  id_workflow INT DEFAULT 0 NOT NULL
 );
