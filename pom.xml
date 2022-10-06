@@ -13,7 +13,7 @@
     <artifactId>module-workflow-extendrating</artifactId>
     <packaging>lutece-plugin</packaging>
     
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>Lutece workflow extendrating module</name>
 
     <repositories>
@@ -60,12 +60,12 @@
     <properties>
         <componentName>workflow-extend-rating</componentName>
         <jiraProjectName>WEXTENDRAT</jiraProjectName>
-        <jiraComponentId></jiraComponentId>
+        <jiraComponentId />
     </properties>
     <scm>
         <connection>scm:git:https://github.com/lutece-platform/lutece-extends-workflow-extendrating.git</connection>
         <developerConnection>scm:git:https://github.com/lutece-platform/lutece-extends-workflow-extendrating.git</developerConnection>
         <url>https:https://github.com/lutece-platform/lutece-extends-workflow-extendrating.git</url>
-        <tag>HEAD</tag>
+        <tag>module-workflow-extendrating-1.0.0</tag>
     </scm>
 </project>
