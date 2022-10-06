@@ -63,9 +63,9 @@
         <jiraComponentId></jiraComponentId>
     </properties>
     <scm>
-        <connection>scm:https://github.com/lutece-platform/workflow-extend-rating.git</connection>
-        <developerConnection>scm:https://github.com/lutece-platform/workflow-extend-rating.git</developerConnection>
-        <url>https:https://github.com/lutece-platform/workflow-extend-rating.git</url>
+        <connection>scm:https://github.com/lutece-platform/lutece-extends-workflow-extendrating.git</connection>
+        <developerConnection>scm:https://github.com/lutece-platform/lutece-extends-workflow-extendrating.git</developerConnection>
+        <url>https:https://github.com/lutece-platform/lutece-extends-workflow-extendrating.git</url>
         <tag>HEAD</tag>
     </scm>
 </project>
