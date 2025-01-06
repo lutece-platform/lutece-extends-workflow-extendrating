@@ -186,15 +186,6 @@ public class UpdateTaskStateResourceQueueService implements IUpdateTaskStateReso
         if ( optionalRating.isPresent( ) )
         {
         	Rating rating= optionalRating.get();
-            Action action = _actionService.findByPrimaryKey( _taskService.findByPrimaryKey( config.getIdTask( ), I18nService.getDefaultLocale( ) ).getAction( ).getId( ) );
-
-            // If initial state is change
-            if ( action.getStateBefore( ).getId( ) != config.getStartState( ) )
-            {
-                updateResourceQueue.setInitialStateChange( true );
-                update( updateResourceQueue );
-                return false;
-            }
 
             if ( config.getOperation( ) == Constants.SUPERIEUR_EGAL && rating.getRatingCount( ) >= config.getNbVote( ) )
             {

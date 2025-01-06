@@ -88,7 +88,6 @@ public class UpdateTaskStateResourceComponent extends NoFormTaskComponent
         Action action = _actionService.findByPrimaryKey( task.getAction( ).getId( ) );
 
         model.put( Constants.MARK_STATES, getStates( request, action.getWorkflow( ).getId( ) ) );
-        model.put( Constants.MARK_INITIAL_STATE, action.getStateBefore( ) );
         model.put( Constants.MARK_CONFIG, _taskConfigService.findByPrimaryKey( task.getId( ) ) );
         model.put( Constants.MARK_SUPERIEUR_EGAL, Constants.SUPERIEUR_EGAL );
         model.put( Constants.MARK_INFERIEUR_EGAL, Constants.INFERIEUR_EGAL );
