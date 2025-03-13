@@ -49,7 +49,7 @@ public final class UpdateTaskStateResourceQueueDAO implements IUpdateTaskStateRe
     private static final String SQL_QUERY_SELECT_BY_ID_TASK_AND_ID_RESOURCE = "SELECT id_resource, id_task, resource_type, initial_state_change, id_initial_state, id_external_parent, id_workflow FROM extend_rating_update_resource_state_queue WHERE id_resource = ? AND id_task = ?";
     private static final String SQL_QUERY_INSERT = "INSERT INTO extend_rating_update_resource_state_queue ( id_resource, id_task, resource_type, initial_state_change, id_initial_state, id_external_parent, id_workflow ) VALUES ( ?, ?, ?, ?, ?, ?, ? ) ";
     private static final String SQL_QUERY_DELETE = "DELETE FROM extend_rating_update_resource_state_queue WHERE id_resource = ? AND id_task = ? ";
-    private static final String SQL_QUERY_UPDATE = "UPDATE extend_rating_update_resource_state_queue SET id_resource = ?, id_task = ?, resource_type = ?, initial_state_change = ?, id_initial_state = ?, id_external_parent = ?, id_workflow = ? WHERE id_resource = ? AND id_task = ? ";
+    private static final String SQL_QUERY_UPDATE = "UPDATE extend_rating_update_resource_state_queue SET id_resource = ?, id_task = ?, resource_type = ?, initial_state_change = ?, id_initial_state = ?, id_external_parent = ?, id_workflow = ? WHERE id_resource = ? AND resource_type = ? AND id_workflow = ? ";
     private static final String SQL_QUERY_SELECTALL_ACTIVED = "SELECT id_resource, id_task, resource_type, initial_state_change, id_initial_state, id_external_parent, id_workflow FROM extend_rating_update_resource_state_queue WHERE initial_state_change = 0";
     private static final String SQL_QUERY_SELECTALL_DISABLED = "SELECT id_resource, id_task, resource_type, initial_state_change, id_initial_state, id_external_parent, id_workflow FROM extend_rating_update_resource_state_queue WHERE initial_state_change = 1";
     private static final String SQL_QUERY_DELETE_BY_ID_TASK = "DELETE FROM extend_rating_update_resource_state_queue WHERE id_task = ? ";
@@ -154,7 +154,8 @@ public final class UpdateTaskStateResourceQueueDAO implements IUpdateTaskStateRe
             daoUtil.setInt( ++nIndex, updateTaskStateResourceQueue.getIdWorkflow( ) );
             
             daoUtil.setInt( ++nIndex, updateTaskStateResourceQueue.getIdResource( ) );
-            daoUtil.setInt( ++nIndex, updateTaskStateResourceQueue.getIdTask( ) );
+            daoUtil.setString( ++nIndex, updateTaskStateResourceQueue.getResourceType( ) );
+            daoUtil.setInt( ++nIndex, updateTaskStateResourceQueue.getIdWorkflow( ) );
 
             daoUtil.executeUpdate( );
             daoUtil.free( );
