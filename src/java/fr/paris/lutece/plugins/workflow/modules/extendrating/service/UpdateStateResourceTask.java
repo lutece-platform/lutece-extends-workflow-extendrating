@@ -35,11 +35,13 @@ package fr.paris.lutece.plugins.workflow.modules.extendrating.service;
 
 import java.util.Locale;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.servlet.http.HttpServletRequest;
 
 
+import fr.paris.lutece.api.user.User;
 import fr.paris.lutece.plugins.workflow.modules.extendrating.business.UpdateTaskStateResourceQueue;
 import fr.paris.lutece.plugins.workflow.modules.extendrating.util.Constants;
 import fr.paris.lutece.plugins.workflowcore.business.resource.ResourceHistory;
@@ -57,6 +59,8 @@ import fr.paris.lutece.portal.service.i18n.I18nService;
  * UpdateResourceStateTask
  *
  */
+@Dependent
+@Named( Constants.BEAN_TASK )
 public class UpdateStateResourceTask extends SimpleTask
 {
     @Inject
@@ -85,7 +89,8 @@ public class UpdateStateResourceTask extends SimpleTask
      * {@inheritDoc}
      */
     @Override
-    public void processTask( int nIdResourceHistory, HttpServletRequest request, Locale locale )
+    public boolean processTaskWithResult( int nIdResource, String strResourceType, int nIdResourceHistory, HttpServletRequest request, Locale locale,
+            User user )
     {
         ResourceHistory resourceHistory = _resourceHistoryService.findByPrimaryKey( nIdResourceHistory );
 
@@ -114,8 +119,13 @@ public class UpdateStateResourceTask extends SimpleTask
             updateResourceQueue.setIdInitialState( resourceWorkflow.getState().getId( ) );
             _updateResourceQueueService.update( updateResourceQueue );
         }
+
+        return true;
     }
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void doRemoveConfig( )
     {
@@ -123,11 +133,18 @@ public class UpdateStateResourceTask extends SimpleTask
         _updateResourceQueueService.deleteByIdTask( this.getId( ) );
     }
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void doRemoveTaskInformation( int nIdHistory )
     {
         ResourceHistory history = _resourceHistoryService.findByPrimaryKey( nIdHistory );
-    	_updateResourceQueueService.delete( history.getIdResource( ), getId( ) );
+
+        if ( history != null )
+        {
+            _updateResourceQueueService.delete( history.getIdResource( ), getId( ) );
+        }
     }
     /**
      * Gets resource type

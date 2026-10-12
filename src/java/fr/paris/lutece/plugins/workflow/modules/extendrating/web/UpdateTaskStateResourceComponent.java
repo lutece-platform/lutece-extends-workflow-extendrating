@@ -38,9 +38,10 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -49,6 +50,7 @@ import fr.paris.lutece.plugins.workflow.modules.extendrating.util.Constants;
 import fr.paris.lutece.plugins.workflow.web.task.NoFormTaskComponent;
 import fr.paris.lutece.plugins.workflowcore.business.action.Action;
 import fr.paris.lutece.plugins.workflowcore.business.state.State;
+import fr.paris.lutece.plugins.workflowcore.business.task.ITaskType;
 import fr.paris.lutece.plugins.workflowcore.service.action.ActionService;
 import fr.paris.lutece.plugins.workflowcore.service.action.IActionService;
 import fr.paris.lutece.plugins.workflowcore.service.config.ITaskConfigService;
@@ -64,18 +66,42 @@ import fr.paris.lutece.util.html.HtmlTemplate;
  * UpdateTaskStateResourceComponent
  *
  */
+@ApplicationScoped
+@Named( Constants.BEAN_TASK_COMPONENT )
 public class UpdateTaskStateResourceComponent extends NoFormTaskComponent
 {
 
     private static final String TEMPLATE_CONFIG = "admin/plugins/workflow/modules/extendrating/update_resource_state_task_form.html";
 
     @Inject
-    @Named( Constants.BEAN_TASK_CONFIG_SERVICE )
-    private ITaskConfigService _taskConfigService;
-
-    @Inject
     @Named( ActionService.BEAN_SERVICE )
     private IActionService _actionService;
+
+    @Inject
+    private WorkflowService _workflowService;
+
+    /**
+     * Constructor for the CDI proxy
+     */
+    UpdateTaskStateResourceComponent( )
+    {
+    }
+
+    /**
+     * Constructor
+     *
+     * @param taskType
+     *            the task type
+     * @param taskConfigService
+     *            the task config service
+     */
+    @Inject
+    public UpdateTaskStateResourceComponent( @Named( Constants.BEAN_TASK_TYPE ) ITaskType taskType,
+            @Named( Constants.BEAN_TASK_CONFIG_SERVICE ) ITaskConfigService taskConfigService )
+    {
+        setTaskType( taskType );
+        setTaskConfigService( taskConfigService );
+    }
 
     /**
      * {@inheritDoc}
@@ -88,7 +114,7 @@ public class UpdateTaskStateResourceComponent extends NoFormTaskComponent
         Action action = _actionService.findByPrimaryKey( task.getAction( ).getId( ) );
 
         model.put( Constants.MARK_STATES, getStates( request, action.getWorkflow( ).getId( ) ) );
-        model.put( Constants.MARK_CONFIG, _taskConfigService.findByPrimaryKey( task.getId( ) ) );
+        model.put( Constants.MARK_CONFIG, getTaskConfigService( ).findByPrimaryKey( task.getId( ) ) );
         model.put( Constants.MARK_SUPERIEUR_EGAL, Constants.SUPERIEUR_EGAL );
         model.put( Constants.MARK_INFERIEUR_EGAL, Constants.INFERIEUR_EGAL );
 
@@ -106,7 +132,7 @@ public class UpdateTaskStateResourceComponent extends NoFormTaskComponent
     {
         User user = AdminUserService.getAdminUser( request );
 
-        Collection<State> states = WorkflowService.getInstance( ).getAllStateByWorkflow( nIdWorkflow, user );
+        Collection<State> states = _workflowService.getAllStateByWorkflow( nIdWorkflow, user );
         ReferenceList referenceList = new ReferenceList( );
         if ( states != null )
         {

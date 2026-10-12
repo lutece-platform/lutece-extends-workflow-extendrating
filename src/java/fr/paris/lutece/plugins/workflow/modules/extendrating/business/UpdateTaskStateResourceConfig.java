@@ -33,19 +33,30 @@
  */
 package fr.paris.lutece.plugins.workflow.modules.extendrating.business;
 
+import fr.paris.lutece.plugins.workflow.modules.extendrating.util.Constants;
 import fr.paris.lutece.plugins.workflowcore.business.config.TaskConfig;
+import jakarta.enterprise.context.Dependent;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.inject.Named;
 
 /**
  * 
  * UpdateTaskStateResourceConfig
  *
  */
+@Dependent
+@Named( Constants.BEAN_TASK_CONFIG )
 public class UpdateTaskStateResourceConfig extends TaskConfig
 {
 
     private int _strStartState;
+    @Min( 1 )
     private int _strEndState;
+    @Min( 1 )
     private int _nNbVote;
+    @Min( Constants.SUPERIEUR_EGAL )
+    @Max( Constants.INFERIEUR_EGAL )
     private int _nOperation;
 
     /**

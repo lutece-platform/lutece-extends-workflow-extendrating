@@ -36,12 +36,16 @@ package fr.paris.lutece.plugins.workflow.modules.extendrating.business;
 import fr.paris.lutece.plugins.workflow.modules.extendrating.util.Constants;
 import fr.paris.lutece.plugins.workflowcore.business.config.ITaskConfigDAO;
 import fr.paris.lutece.util.sql.DAOUtil;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Named;
 
 /**
  * 
  * UpdateTaskStateResourceConfigDAO
  *
  */
+@ApplicationScoped
+@Named( Constants.BEAN_TASK_CONFIG_DAO )
 public class UpdateTaskStateResourceConfigDAO implements ITaskConfigDAO<UpdateTaskStateResourceConfig>
 {
 
@@ -70,7 +74,6 @@ public class UpdateTaskStateResourceConfigDAO implements ITaskConfigDAO<UpdateTa
             daoUtil.setInt( nIndex++, config.getOperation( ) );
 
             daoUtil.executeUpdate( );
-            daoUtil.free( );
         }
     }
 
@@ -91,7 +94,6 @@ public class UpdateTaskStateResourceConfigDAO implements ITaskConfigDAO<UpdateTa
 
             daoUtil.setInt( nIndex++, config.getIdTask( ) );
             daoUtil.executeUpdate( );
-            daoUtil.free( );
         }
     }
 
@@ -121,7 +123,6 @@ public class UpdateTaskStateResourceConfigDAO implements ITaskConfigDAO<UpdateTa
                 config.setOperation( daoUtil.getInt( nIndex++ ) );
             }
 
-            daoUtil.free( );
 
             return config;
         }
@@ -137,7 +138,6 @@ public class UpdateTaskStateResourceConfigDAO implements ITaskConfigDAO<UpdateTa
         {
             daoUtil.setInt( 1, nIdTask );
             daoUtil.executeUpdate( );
-            daoUtil.free( );
         }
     }
 

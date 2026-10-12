@@ -47,6 +47,11 @@ public final class Constants
     public static final String PLUGIN_NAME = "workflow-extendrating";
     public static final String BEAN_TASK_CONFIG_SERVICE = PLUGIN_NAME + ".taskUpdateResourceStateConfigService";
     public static final String BEAN_UPDATE_RESOURCE_QUEUE_SERVICE = PLUGIN_NAME + ".updateResourceQueueService";
+    public static final String BEAN_TASK_CONFIG_DAO = PLUGIN_NAME + ".taskUpdateResourceStateConfigDAO";
+    public static final String BEAN_TASK_TYPE = PLUGIN_NAME + ".taskTypeUpdateResourceState";
+    public static final String BEAN_TASK = PLUGIN_NAME + ".updateResourceStateTask";
+    public static final String BEAN_TASK_CONFIG = PLUGIN_NAME + ".updateResourceStateTaskConfig";
+    public static final String BEAN_TASK_COMPONENT = PLUGIN_NAME + ".updateResourceStateTaskComponent";
 
     // CONSTANTS
     public static final String FORMS_FORM_RESPONSE = "FORMS_FORM_RESPONSE";

@@ -33,8 +33,10 @@
  */
 package fr.paris.lutece.plugins.workflow.modules.extendrating.service;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.event.Observes;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -43,8 +45,9 @@ import fr.paris.lutece.plugins.workflow.modules.extendrating.util.Constants;
 import fr.paris.lutece.plugins.workflowcore.business.resource.ResourceWorkflow;
 import fr.paris.lutece.plugins.workflowcore.service.resource.IResourceWorkflowService;
 import fr.paris.lutece.plugins.workflowcore.service.resource.ResourceWorkflowService;
-import fr.paris.lutece.portal.business.event.EventRessourceListener;
 import fr.paris.lutece.portal.business.event.ResourceEvent;
+import fr.paris.lutece.portal.service.event.EventAction;
+import fr.paris.lutece.portal.service.event.Type;
 import fr.paris.lutece.portal.service.util.AppLogService;
 
 /**
@@ -52,7 +55,8 @@ import fr.paris.lutece.portal.service.util.AppLogService;
  * UpdateTaskStateResourceListener
  *
  */
-public class UpdateTaskStateResourceListener implements EventRessourceListener
+@ApplicationScoped
+public class UpdateTaskStateResourceListener
 {
     @Inject
     @Named( Constants.BEAN_UPDATE_RESOURCE_QUEUE_SERVICE )
@@ -63,20 +67,13 @@ public class UpdateTaskStateResourceListener implements EventRessourceListener
     private IResourceWorkflowService _resourceWorkflowService;
     
     
-    @Override
-    public String getName( )
-    {
-        return Constants.PLUGIN_NAME;
-    }
-
-    @Override
-    public void addedResource( ResourceEvent event )
-    {
-        // do nothing
-    }
-
-    @Override
-    public void deletedResource( ResourceEvent event )
+    /**
+     * Removes the queued resource when the resource is deleted
+     *
+     * @param event
+     *            the resource event
+     */
+    public void deletedResource( @Observes @Type( EventAction.REMOVE ) ResourceEvent event )
     {
         try
         {
@@ -91,8 +88,13 @@ public class UpdateTaskStateResourceListener implements EventRessourceListener
         }
     }
 
-    @Override
-    public void updatedResource( ResourceEvent event )
+    /**
+     * Removes the queued resource when its workflow state changed
+     *
+     * @param event
+     *            the resource event
+     */
+    public void updatedResource( @Observes @Type( EventAction.UPDATE ) ResourceEvent event )
     {
         try
         {

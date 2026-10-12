@@ -40,7 +40,9 @@ import fr.paris.lutece.plugins.workflow.modules.extendrating.business.UpdateTask
 import fr.paris.lutece.plugins.workflow.modules.extendrating.util.Constants;
 import fr.paris.lutece.plugins.workflowcore.service.config.ITaskConfigService;
 import fr.paris.lutece.portal.service.daemon.Daemon;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
+import fr.paris.lutece.portal.service.util.AppLogService;
+import jakarta.enterprise.inject.literal.NamedLiteral;
+import jakarta.enterprise.inject.spi.CDI;
 
 /**
  * 
@@ -56,19 +58,26 @@ public class UpdateTaskStateResourceDaemon extends Daemon
     @Override
     public void run( )
     {
-        ITaskConfigService configService = SpringContextService.getBean( Constants.BEAN_TASK_CONFIG_SERVICE );
+        ITaskConfigService configService = CDI.current( ).select( ITaskConfigService.class, NamedLiteral.of( Constants.BEAN_TASK_CONFIG_SERVICE ) ).get( );
 
         StringBuilder sbLog = new StringBuilder( );
 
-        IUpdateTaskStateResourceQueueService updateResourceQueueService = SpringContextService.getBean( Constants.BEAN_UPDATE_RESOURCE_QUEUE_SERVICE );
+        IUpdateTaskStateResourceQueueService updateResourceQueueService = CDI.current( ).select( IUpdateTaskStateResourceQueueService.class ).get( );
 
         for ( UpdateTaskStateResourceQueue updateResourceQueue : updateResourceQueueService.findAllActived( ) )
         {
-            UpdateTaskStateResourceConfig config = configService.findByPrimaryKey( updateResourceQueue.getIdTask( ) );
-
-            if ( updateResourceQueueService.isVotingGoalValid( config, updateResourceQueue ) )
+            try
             {
-                updateResourceQueueService.doChangeState( config, updateResourceQueue );
+                UpdateTaskStateResourceConfig config = configService.findByPrimaryKey( updateResourceQueue.getIdTask( ) );
+
+                if ( config != null && updateResourceQueueService.isVotingGoalValid( config, updateResourceQueue ) )
+                {
+                    updateResourceQueueService.doChangeState( config, updateResourceQueue );
+                }
+            }
+            catch( RuntimeException e )
+            {
+                AppLogService.error( "Unable to process the queued resource {} of task {}", updateResourceQueue.getIdResource( ), updateResourceQueue.getIdTask( ), e );
             }
         }
 
