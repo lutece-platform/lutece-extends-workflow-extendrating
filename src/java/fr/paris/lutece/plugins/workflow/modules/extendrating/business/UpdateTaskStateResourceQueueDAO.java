@@ -34,6 +34,7 @@
 package fr.paris.lutece.plugins.workflow.modules.extendrating.business;
 
 import fr.paris.lutece.util.sql.DAOUtil;
+import jakarta.enterprise.context.ApplicationScoped;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +42,7 @@ import java.util.List;
 /**
  * This class provides Data Access methods for UpdateTaskStateResourceQueue objects
  */
+@ApplicationScoped
 public final class UpdateTaskStateResourceQueueDAO implements IUpdateTaskStateResourceQueueDAO
 {
 
@@ -74,7 +76,6 @@ public final class UpdateTaskStateResourceQueueDAO implements IUpdateTaskStateRe
             daoUtil.setInt( ++nIndex, updateTaskStateResourceQueue.getIdWorkflow( ) );
             
             daoUtil.executeUpdate( );
-            daoUtil.free( );
         }
     }
 
@@ -104,7 +105,6 @@ public final class UpdateTaskStateResourceQueueDAO implements IUpdateTaskStateRe
                 updateTaskStateResourceQueue.setIdWorkflow( daoUtil.getInt( ++nIndex ) );
             }
 
-            daoUtil.free( );
 
             return updateTaskStateResourceQueue;
         }
@@ -121,10 +121,12 @@ public final class UpdateTaskStateResourceQueueDAO implements IUpdateTaskStateRe
             daoUtil.setInt( 1, nIdResource );
             daoUtil.setInt( 2, nIdTask );
             daoUtil.executeUpdate( );
-            daoUtil.free( );
         }
     }
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void deleteByIdTask(int nIdTask)
 	{
@@ -132,7 +134,6 @@ public final class UpdateTaskStateResourceQueueDAO implements IUpdateTaskStateRe
         {
             daoUtil.setInt( 1, nIdTask );
             daoUtil.executeUpdate( );
-            daoUtil.free( );
         }
 	}
 	
@@ -158,7 +159,6 @@ public final class UpdateTaskStateResourceQueueDAO implements IUpdateTaskStateRe
             daoUtil.setInt( ++nIndex, updateTaskStateResourceQueue.getIdWorkflow( ) );
 
             daoUtil.executeUpdate( );
-            daoUtil.free( );
         }
     }
 
@@ -188,7 +188,6 @@ public final class UpdateTaskStateResourceQueueDAO implements IUpdateTaskStateRe
                 listUpdateResourceQueues.add( updateTaskStateResourceQueue );
             }
 
-            daoUtil.free( );
 
             return listUpdateResourceQueues;
         }
@@ -220,7 +219,6 @@ public final class UpdateTaskStateResourceQueueDAO implements IUpdateTaskStateRe
                 listUpdateResourceQueues.add( updateTaskStateResourceQueue );
             }
 
-            daoUtil.free( );
 
             return listUpdateResourceQueues;
         }
@@ -253,12 +251,14 @@ public final class UpdateTaskStateResourceQueueDAO implements IUpdateTaskStateRe
                 updateTaskStateResourceQueue.setIdWorkflow( daoUtil.getInt( ++nIndex ) );
             }
 
-            daoUtil.free( );
 
             return updateTaskStateResourceQueue;
         }
     }
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void delete( int nIdResource, String strResourceType )
 	{
@@ -267,10 +267,12 @@ public final class UpdateTaskStateResourceQueueDAO implements IUpdateTaskStateRe
             daoUtil.setInt( 1, nIdResource );
             daoUtil.setString( 2, strResourceType );
             daoUtil.executeUpdate( );
-            daoUtil.free( );
         }
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public UpdateTaskStateResourceQueue find(int nIdResource, String strResourceType)
 	{
@@ -295,7 +297,6 @@ public final class UpdateTaskStateResourceQueueDAO implements IUpdateTaskStateRe
                 updateTaskStateResourceQueue.setIdWorkflow( daoUtil.getInt( ++nIndex ) );
             }
 
-            daoUtil.free( );
 
             return updateTaskStateResourceQueue;
         }

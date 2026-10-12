@@ -1,3 +1,7 @@
+-- liquibase formatted sql
+-- changeset workflow-extendrating:create_db_workflow-extendrating.sql
+-- preconditions onFail:MARK_RAN onError:WARN
+-- precondition-sql-check expectedResult:1 SELECT COUNT(*) FROM task_extend_rating_update_resource_state_cf WHERE 1 = 0
 --
 -- Table structure for table task_alert_cf
 --

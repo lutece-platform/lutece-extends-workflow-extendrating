@@ -41,7 +41,7 @@ import org.apache.commons.lang3.StringUtils;
 import fr.paris.lutece.plugins.workflow.modules.extendrating.business.UpdateTaskStateResourceQueue;
 import fr.paris.lutece.plugins.workflow.modules.extendrating.util.Constants;
 import fr.paris.lutece.portal.service.daemon.Daemon;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
+import jakarta.enterprise.inject.spi.CDI;
 
 /**
  * UpdateResourceStateDaemon
@@ -58,7 +58,7 @@ public class UpdateTaskStateResourceCleanerDaemon extends Daemon
     {
         StringBuilder sbLog = new StringBuilder( );
 
-        IUpdateTaskStateResourceQueueService updateResourceQueueService = SpringContextService.getBean( Constants.BEAN_UPDATE_RESOURCE_QUEUE_SERVICE );
+        IUpdateTaskStateResourceQueueService updateResourceQueueService = CDI.current( ).select( IUpdateTaskStateResourceQueueService.class ).get( );
 
         for ( UpdateTaskStateResourceQueue updateResourceQueue : updateResourceQueueService.findAllDisabled( ) )
         {

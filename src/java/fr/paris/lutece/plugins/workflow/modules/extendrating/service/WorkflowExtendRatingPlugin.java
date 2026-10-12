@@ -34,11 +34,9 @@
 package fr.paris.lutece.plugins.workflow.modules.extendrating.service;
 
 import fr.paris.lutece.plugins.workflow.modules.extendrating.util.Constants;
-import fr.paris.lutece.portal.service.event.ResourceEventManager;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginDefaultImplementation;
 import fr.paris.lutece.portal.service.plugin.PluginService;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
 
 /**
  * 
@@ -47,17 +45,6 @@ import fr.paris.lutece.portal.service.spring.SpringContextService;
  */
 public class WorkflowExtendRatingPlugin extends PluginDefaultImplementation
 {	
-	private static final String BEAN_UPDATE_TASK_RESOURCE_LISTENER = Constants.PLUGIN_NAME + ".updateTaskStateResourceListener";
-	
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void init( )
-    {
-        ResourceEventManager.register( SpringContextService.getBean( BEAN_UPDATE_TASK_RESOURCE_LISTENER ) );
-    }
-
     /**
      * Return the plugin
      *

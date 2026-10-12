@@ -37,8 +37,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import fr.paris.lutece.plugins.extend.modules.rating.business.Rating;
 import fr.paris.lutece.plugins.extend.modules.rating.business.SimpleRating;
@@ -60,6 +61,7 @@ import fr.paris.lutece.plugins.workflowcore.service.resource.ResourceHistoryServ
 import fr.paris.lutece.plugins.workflowcore.service.resource.ResourceWorkflowService;
 import fr.paris.lutece.plugins.workflowcore.service.state.IStateService;
 import fr.paris.lutece.plugins.workflowcore.service.state.StateService;
+import fr.paris.lutece.plugins.workflowcore.service.task.ITask;
 import fr.paris.lutece.plugins.workflowcore.service.task.ITaskService;
 import fr.paris.lutece.plugins.workflowcore.service.task.TaskService;
 import fr.paris.lutece.portal.service.i18n.I18nService;
@@ -70,6 +72,8 @@ import fr.paris.lutece.portal.service.workflow.WorkflowService;
  * UpdateTaskStateResourceQueueService
  *
  */
+@ApplicationScoped
+@Named( Constants.BEAN_UPDATE_RESOURCE_QUEUE_SERVICE )
 public class UpdateTaskStateResourceQueueService implements IUpdateTaskStateResourceQueueService
 {
     @Inject
@@ -89,6 +93,8 @@ public class UpdateTaskStateResourceQueueService implements IUpdateTaskStateReso
     private ITaskService _taskService;
     @Inject
     private IUpdateTaskStateResourceQueueDAO _updateResourceQueueDAO;
+    @Inject
+    private WorkflowService _workflowService;
 
     /**
      * {@inheritDoc}
@@ -102,6 +108,9 @@ public class UpdateTaskStateResourceQueueService implements IUpdateTaskStateReso
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void update( UpdateTaskStateResourceQueue updateResourceQueue )
     {
@@ -206,10 +215,17 @@ public class UpdateTaskStateResourceQueueService implements IUpdateTaskStateReso
     public void doChangeState( UpdateTaskStateResourceConfig config, UpdateTaskStateResourceQueue updateResourceQueue )
     {
         Locale locale = I18nService.getDefaultLocale( );
-        Action action = _actionService.findByPrimaryKey( _taskService.findByPrimaryKey( config.getIdTask( ), locale ).getAction( ).getId( ) );
+        ITask task = _taskService.findByPrimaryKey( config.getIdTask( ), locale );
+        Action action = task == null ? null : _actionService.findByPrimaryKey( task.getAction( ).getId( ) );
         State state = _stateService.findByPrimaryKey( config.getEndState( ) );
+        ResourceWorkflow resourceWorkflow = action == null ? null
+                : _resourceWorkflowService.findByPrimaryKey( updateResourceQueue.getIdResource( ), Constants.FORMS_FORM_RESPONSE, action.getWorkflow( ).getId( ) );
 
-        if ( state != null && action != null )
+        if ( action == null || resourceWorkflow == null )
+        {
+            delete( updateResourceQueue.getIdResource( ), updateResourceQueue.getIdTask( ) );
+        }
+        else if ( state != null )
         {
             // Create Resource History
             ResourceHistory resourceHistory = new ResourceHistory( );
@@ -222,8 +238,6 @@ public class UpdateTaskStateResourceQueueService implements IUpdateTaskStateReso
             _resourceHistoryService.create( resourceHistory );
 
             // Update Resource
-            ResourceWorkflow resourceWorkflow = _resourceWorkflowService.findByPrimaryKey( updateResourceQueue.getIdResource( ), Constants.FORMS_FORM_RESPONSE,
-                    action.getWorkflow( ).getId( ) );
             resourceWorkflow.setState( state );
             _resourceWorkflowService.update( resourceWorkflow );
 
@@ -231,11 +245,11 @@ public class UpdateTaskStateResourceQueueService implements IUpdateTaskStateReso
             delete( updateResourceQueue.getIdResource( ), updateResourceQueue.getIdTask( ) );
             
             // If the new state has automatic reflexive actions
-            WorkflowService.getInstance( ).doProcessAutomaticReflexiveActions( updateResourceQueue.getIdResource( ), Constants.FORMS_FORM_RESPONSE,
+            _workflowService.doProcessAutomaticReflexiveActions( updateResourceQueue.getIdResource( ), Constants.FORMS_FORM_RESPONSE,
                     state.getId( ), resourceWorkflow.getExternalParentId( ), locale, null );
 
             // if new state has action automatic
-            WorkflowService.getInstance( ).executeActionAutomatic( updateResourceQueue.getIdResource( ), Constants.FORMS_FORM_RESPONSE,
+            _workflowService.executeActionAutomatic( updateResourceQueue.getIdResource( ), Constants.FORMS_FORM_RESPONSE,
                     action.getWorkflow( ).getId( ), resourceWorkflow.getExternalParentId( ), null );
         }
     }
